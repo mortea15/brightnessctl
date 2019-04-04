@@ -1,39 +1,44 @@
-# brightnessctl
-This shell project is designed to allow change of the
-*/sys/class/backlight/&#42;/brightness* without being root.
-This is usefull for keybinding.
+# kbd_brightness
 
-# installation
-Installation is mostly done by the small makescript I wrote. 
-However setting this up for i3 and edditing the sudoers file
-needs to be done manually.
+## configuration
+Find the leds that control your keyboard backlight
+
+	$ ls /sys/class/leds
+
+Copy the name and paste it in the [configuration.sh](configuration.sh) file.
+You can also set the stepSize to values that make sense for your device. Check the output of the following command to get an idea:
+
+	$ cat /sys/class/leds/DEVICE_NAME/max_brightness
+
+## installation
 
     $ sudo make install
 
-## Make sudo not ask for a password
+### Make sudo not ask for a password
 The script needs to be able to be run as root without sudo asking for a
 password (otherwise you can't keybind it).
 
 	$ sudo visudo
 
-and insert the following line
+and insert the following lines
 
-	%wheel ALL=(root) NOPASSWD: /usr/local/bin/brightness
+	Cmd_Alias PASSWORDLESS = /usr/local/bin/kbd_brightness
+	username ALL=(root) NOPASSWD: PASSWORDLESS
 
-In my case the sudoers group is equal to wheel.
+### Testing
+Now type
 
-### Testing ###
-Now type in (be warned, a brightness of 0 made my screen completly black in the
-passed, use arrow up to get the 100 command again)
-
-	$brightness 100
-	$brightness 0
+	$ kbd_brightness 3
+	$ kbd_brightness 0
 
 The birghtness should have chagned.
 Now you can setup keybindings to this script for your favorite window manager!
 
-## Key binding (i3)
+### Key binding (i3)
 If you use i3 you could use the following lines in your config to fix keybinding:
 
-	bindsym $mod+F8 exec brightness-
-	bindsym $mod+F9 exec brightness+
+	bindsym XF86KbdBrightnessUp exec kbd_brightness+
+	bindsym XF86KbdBrightnessDown exec kbd_brightness-
+
+## Based on [brightnessctl](https://github.com/jappeace/brightnessctl)
+**Credits to [@jappeace](https://github.com/jappeace) for his work.**
