@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd "/usr/local/lib/brightnessctl"
+cd "/usr/local/lib/kbd_brightness"
 source configuration.sh
 if [ -z "$1" ]
 then
